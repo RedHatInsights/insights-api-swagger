@@ -1,0 +1,111 @@
+swagger: "2.0"
+
+info:
+  title: Insights Advisor API
+  description: Public API for the Insights Advisor
+  version: "3.0.0"
+
+host: access.redhat.com
+basePath: /r/insights/v3
+schemes:
+  - https
+
+produces:
+  - application/json
+
+securityDefinitions:
+  basicAuth:
+    type: basic
+
+security:
+  - basicAuth: []
+
+paths:
+  /systems/{systemId}:
+    get:
+      summary: Request user information
+      operationId: showSystem
+      parameters:
+        - name: systemId
+          in: path
+          required: true
+          description: The id of the system to retrieve
+          type: string
+      tags:
+        - System
+      responses:
+        "200":
+          description: A System
+          schema:
+            $ref: '#/definitions/System'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+definitions:
+  SystemAck:
+    properties:
+      global:
+        type: boolean
+      groups:
+        type: array
+        items:
+          type: object
+      rule_id:
+        type: string
+      system:
+        type: boolean
+  System:
+    required:
+      - system_id
+    properties:
+      account_number:
+        type: string
+      acks:
+        type: array
+        items:
+          $ref: '#/definitions/SystemAck'
+      created_at:
+        type: string
+        format: date-time
+      display_name:
+        type: string
+      hostname:
+        type: string
+      isCheckingIn:
+        type: boolean
+      last_check_in:
+        type: string
+        format: date-time
+      product_code:
+        type: string
+      remote_branch:
+        type: string
+      remote_leaf:
+        type: string
+      report_count:
+        type: integer
+      role:
+        type: string
+      system_id:
+        type: string
+      system_type_id:
+        type: integer
+      toString:
+        type: string
+      unregistered_at:
+        type: string
+        format: date-time
+      updated_at:
+        type: string
+        format: date-time
+  Error:
+    required:
+      - code
+      - message
+    properties:
+      code:
+        type: integer
+        format: int32
+      message:
+        type: string
