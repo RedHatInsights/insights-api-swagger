@@ -1,8 +1,8 @@
 swagger: "2.0"
 
 info:
-  title: Insights Advisor API
-  description: Public API for the Insights Advisor
+  title: Legacy Insights API
+  description: Public API for the Legacy Insights
   version: "3.0.0"
 
 host: access.redhat.com
@@ -21,9 +21,35 @@ security:
   - basicAuth: []
 
 paths:
+  /systems:
+    get:
+      summary: Get a list of Systems
+      operationId: listSystems
+      parameters:
+      - name: "offline"
+        in: "query"
+        description: "If set to `true` then only systems that are offline (haven't checked in past 26 hours) are returned. If set to `false` then only systems that are not offline are returned. If the parameter is left out then both offline and non-offline systems are returned."
+        type: "boolean"
+      - name: "rule"
+        in: "query"
+        description: "If specified then only reports created by the given rule are considered in `report_count`"
+        type: "string"
+      tags:
+        - System
+      responses:
+        "200":
+          description: A list of Systems
+          schema:
+            type: "array"
+            items:
+              $ref: '#/definitions/System'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
   /systems/{systemId}:
     get:
-      summary: Request user information
+      summary: Request System Details
       operationId: showSystem
       parameters:
         - name: systemId
